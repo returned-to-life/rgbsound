@@ -23,6 +23,7 @@ public class WatchFreqCursorComponent extends JComponent {
 
     public WatchFreqCursorComponent() {
         super();
+        cellcount = 8;
     }
 
     public int getCellCount() {
