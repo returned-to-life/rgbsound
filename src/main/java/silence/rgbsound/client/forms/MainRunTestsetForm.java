@@ -43,6 +43,7 @@ public class MainRunTestsetForm extends JFrame {
 
     public MainRunTestsetForm() {
         setContentPane(panelOne);
+
         playSoundButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

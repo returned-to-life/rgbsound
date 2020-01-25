@@ -10,10 +10,7 @@ public class FrameComposer {
     long			frameCountPeak;
     long			frameCountOut;
 
-    long			peakAmp;
-
-    public FrameComposer(int Rate, double Length, long PeakAmp) {
-        peakAmp = PeakAmp;
+    public FrameComposer(int Rate, double Length) {
 
         long frameCount = Math.round( Rate * Length / frameSize );
 
@@ -34,24 +31,24 @@ public class FrameComposer {
     public int	getFrameSize(long frameIndex) {
         return		frameSize;
     }
-    public long	getAmp(long frameIndex) {
-        long	res = 0;
+    public double getAmp(long frameIndex) {
+        double	res = 0;
         if (frameIndex < frameCountIn) {
-            res = Math.round( peakAmp * (Double.valueOf(frameIndex) / Double.valueOf(frameCountIn)) );
+            res = (Double.valueOf(frameIndex) / Double.valueOf(frameCountIn)) ;
         }
         else if (frameIndex < frameCountIn + frameCountPeak) {
-            res = peakAmp;
+            res = 1.0;
         }
         else if (frameIndex < frameCountIn + frameCountPeak + frameCountOut) {
             double fromPartStart = Double.valueOf(frameIndex - frameCountIn - frameCountPeak);
             double length = Double.valueOf(frameCountOut);
-            res = Math.round( peakAmp * ((length - fromPartStart) / length) );
+            res = ((length - fromPartStart) / length);
         }
         return res;
     }
 
     public static void main(String[] args) {
-        FrameComposer fc = new FrameComposer(44100, 0.3, 30000);
+        FrameComposer fc = new FrameComposer(44100, 0.3);
 
         System.out.println("FrameComposer [frameIndex; frameAmp]");
         for (int i = 0; i < fc.getFrameCount(); i++) {
@@ -59,7 +56,7 @@ public class FrameComposer {
         }
         System.out.println();
 
-        FrameComposer fc2 = new FrameComposer(44100, 2.0, 30000);
+        FrameComposer fc2 = new FrameComposer(44100, 2.0);
         for (int i = 0; i < fc2.getFrameCount(); i++) {
             System.out.println("[" + i + "; " + fc2.getAmp(i) + "]");
         }

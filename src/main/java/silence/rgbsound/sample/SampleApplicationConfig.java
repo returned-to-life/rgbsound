@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 import silence.rgbsound.audio.PlaySound;
+import silence.rgbsound.client.control.AmpCursor;
+import silence.rgbsound.client.control.FreqCursor;
+import silence.rgbsound.client.control.PhaseCursor;
 import silence.rgbsound.client.control.RunTestsetController;
 import silence.rgbsound.client.forms.MainRunTestsetForm;
 import silence.rgbsound.client.forms.PickTestsetForm;
@@ -27,6 +30,10 @@ public class SampleApplicationConfig {
         PickTestsetForm dialog = new PickTestsetForm();
         dialog.setCommunicator(communicator());
         return dialog;
+        /*
+        PickTestsetForm dialog = ctx.getBean("pickTestsetDialog", PickTestsetForm.class);
+        dialog.pack();
+        dialog.setVisible(true);*/
     }
 
     @Bean
@@ -44,11 +51,19 @@ public class SampleApplicationConfig {
     @Bean
     public RunTestsetController controller() {
         RunTestsetController control = new RunTestsetController();
+        control.setFreqCursor(freqs());
+        control.setAmpCursor(new AmpCursor());
+        control.setPhaseCursor(new PhaseCursor());
         control.setProjectRate(44100);
         control.setProjectMaxAmp(8000);
         control.setPlaySound(player());
         control.setWaveWriter(waveWriter());
         return control;
+    }
+
+    @Bean
+    public FreqCursor freqs() {
+        return new FreqCursor();
     }
 
     @Bean

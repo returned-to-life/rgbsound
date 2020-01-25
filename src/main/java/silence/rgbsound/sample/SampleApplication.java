@@ -13,11 +13,6 @@ public class SampleApplication {
     public static void main(String[] args) {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(SampleApplicationConfig.class);
 
-/*
-        PickTestsetForm dialog = ctx.getBean("pickTestsetDialog", PickTestsetForm.class);
-        dialog.pack();
-        dialog.setVisible(true);*/
-
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 MainRunTestsetForm mainForm = ctx.getBean("testsetForm", MainRunTestsetForm.class);
