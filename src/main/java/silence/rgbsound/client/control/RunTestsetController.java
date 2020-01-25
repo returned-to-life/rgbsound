@@ -43,32 +43,29 @@ public class RunTestsetController {
     }
 
     public void PlayCurrentStepSound() {
-        Wave waveA = new Wave((int)projectRate, freqCursor.getFreqA(), projectMaxAmp , phaseCursor.getPhase());
-        Wave waveB = new Wave((int)projectRate, freqCursor.getFreqB(), projectMaxAmp, phaseCursor.getPhase());
+        Sample sample = new Sample(projectRate);
 
-        double[] ps = {1.0, 0.7, 0.5, 0.3, 0.0};
-        ArrayList<WaveMix> wms = new ArrayList<>();
+        ampCursor.start();
+        while (ampCursor.isNotEnd()) {
+            Wave waveA = new Wave((int) projectRate, freqCursor.getFreqA(), ampCursor.getMaxAmp(), phaseCursor.getPhase());
+            Wave waveB = new Wave((int) projectRate, freqCursor.getFreqB(), ampCursor.getMaxAmp(), phaseCursor.getPhase());
 
-        for (double p : ps) {
-            WaveMix WM = new WaveMix(waveA, p);
-            WM.mix(waveB, 1.0 - p);
-            wms.add(WM);
+            WaveMix WM = new WaveMix(waveA, ampCursor.getAmpFactor());
+            WM.mix(waveB, 1.0 - ampCursor.getAmpFactor());
+
+            sample.append(WM, 1.0);
+            ampCursor.next();
         }
 
-        Sample s = new Sample(projectRate, 1.0, projectMaxAmp, wms.get(0));
-        for (WaveMix WM : wms) {
-            s.append(WM, 1.0);
-        }
-
-        String filename = "tmpsound";
-        waveWriter.setChunk(s);
+        String filename = "lastsamplesound";
+        waveWriter.setChunk(sample);
         waveWriter.finalise(filename);
         playSound.play(filename);
     }
 
     public void PlayReferenceSound() {
         Wave reference = new Wave((int) projectRate, 440.0, 8000, 0.0);
-        Sample s = new Sample(projectRate, 1.0, projectMaxAmp, reference);
+        Sample s = new Sample(projectRate, 1.0, reference);
         String filename = "tmpsound";
         waveWriter.setChunk(s);
         waveWriter.finalise(filename);

@@ -52,7 +52,7 @@ public class SampleApplicationConfig {
     public RunTestsetController controller() {
         RunTestsetController control = new RunTestsetController();
         control.setFreqCursor(freqs());
-        control.setAmpCursor(new AmpCursor());
+        control.setAmpCursor(new AmpCursor(8000));
         control.setPhaseCursor(new PhaseCursor());
         control.setProjectRate(44100);
         control.setProjectMaxAmp(8000);

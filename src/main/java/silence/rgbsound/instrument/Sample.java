@@ -7,12 +7,15 @@ public class Sample extends Chunk {
     /* technically just a wrap for the main use-case of frameComposer
      *  */
     long rate;
-    long max_amp;
 
-    public Sample(long Rate, double Length, long MaxAmp, IChunkSeq wm) {
+    public Sample(long Rate) {
         super();
         rate = Rate;
-        max_amp = MaxAmp;
+    }
+
+    public Sample(long Rate, double Length, IChunkSeq wm) {
+        super();
+        rate = Rate;
 
         FrameComposer fc = new FrameComposer((int) Rate, Length);
         wm.start();
