@@ -63,7 +63,7 @@ public class SampleApplicationConfig {
 
     @Bean
     public FreqCursor freqs() {
-        return new FreqCursor();
+        return new FreqCursor(440.0, 630.0, 8, 15.0);
     }
 
     @Bean

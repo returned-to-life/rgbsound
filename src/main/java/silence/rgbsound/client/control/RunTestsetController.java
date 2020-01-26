@@ -22,6 +22,8 @@ public class RunTestsetController {
     WaveFileWriter waveWriter;
     TestsetRunState state;
 
+    public AmpCursor getAmpCursor() { return ampCursor; }
+
     public void setFreqCursor(FreqCursor freqCursor) { this.freqCursor = freqCursor;    }
     public void setAmpCursor(AmpCursor ampCursor) { this.ampCursor = ampCursor; }
     public void setPhaseCursor(PhaseCursor phaseCursor) {this.phaseCursor = phaseCursor; }
@@ -42,25 +44,22 @@ public class RunTestsetController {
         }
     }
 
-    public void PlayCurrentStepSound() {
+    public void PlayCurrentStepSound() throws InterruptedException {
         Sample sample = new Sample(projectRate);
 
-        ampCursor.start();
-        while (ampCursor.isNotEnd()) {
-            Wave waveA = new Wave((int) projectRate, freqCursor.getFreqA(), ampCursor.getMaxAmp(), phaseCursor.getPhase());
-            Wave waveB = new Wave((int) projectRate, freqCursor.getFreqB(), ampCursor.getMaxAmp(), phaseCursor.getPhase());
+        Wave waveA = new Wave((int) projectRate, freqCursor.getFreqA(), ampCursor.getMaxAmp(), phaseCursor.getPhase());
+        Wave waveB = new Wave((int) projectRate, freqCursor.getFreqB(), ampCursor.getMaxAmp(), phaseCursor.getPhase());
 
-            WaveMix WM = new WaveMix(waveA, ampCursor.getAmpFactor());
-            WM.mix(waveB, 1.0 - ampCursor.getAmpFactor());
+        WaveMix WM = new WaveMix(waveA, ampCursor.getAmpFactor());
+        WM.mix(waveB, 1.0 - ampCursor.getAmpFactor());
 
-            sample.append(WM, 1.0);
-            ampCursor.next();
-        }
+        sample.append(WM, 1.0);
 
         String filename = "lastsamplesound";
         waveWriter.setChunk(sample);
         waveWriter.finalise(filename);
         playSound.play(filename);
+        Thread.sleep(1000);
     }
 
     public void PlayReferenceSound() {
