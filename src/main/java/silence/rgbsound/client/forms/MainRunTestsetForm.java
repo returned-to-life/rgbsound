@@ -66,6 +66,38 @@ public class MainRunTestsetForm extends JFrame {
                 onPlayReference();
             }
         });
+        startStopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) { onStartStop(); }
+        });
+    }
+
+    private void onStartStop() {
+        if (testsetController == null) return;
+        if (testsetController.isActive()) {
+            testsetController.Stop();
+            return;
+        }
+
+        SwingWorker<Void, Integer> playTask = new SwingWorker<Void, Integer>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                testsetController.Start();
+                while (testsetController.isActive()) {
+                    publish(1);
+                    testsetController.PlayCurrentStepSound();
+                    testsetController.NextStep();
+                }
+                return null;
+            }
+            @Override
+            protected void process(List<Integer> arg) {
+                UpdateFreqFields(testsetController.getFreqCursor());
+                UpdatePhaseFields(testsetController.getPhaseCursor());
+                UpdateAmpFields(testsetController.getAmpCursor());
+            }
+        };
+        playTask.execute();
     }
 
     private void onPlaySound() {

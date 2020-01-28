@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class RunTestsetController {
     /* all MainRunTestsetForm actions */
-    enum TestsetRunState {RUNNING, STOPPED, PAUSED};
+    public enum TestsetRunState {RUNNING, STOPPED};
 
     FreqCursor freqCursor;
     AmpCursor ampCursor;
@@ -23,6 +23,8 @@ public class RunTestsetController {
     TestsetRunState state;
 
     public AmpCursor getAmpCursor() { return ampCursor; }
+    public FreqCursor getFreqCursor() { return freqCursor; }
+    public PhaseCursor getPhaseCursor() { return phaseCursor; }
 
     public void setFreqCursor(FreqCursor freqCursor) { this.freqCursor = freqCursor;    }
     public void setAmpCursor(AmpCursor ampCursor) { this.ampCursor = ampCursor; }
@@ -34,13 +36,36 @@ public class RunTestsetController {
     }
     public void setWaveWriter(WaveFileWriter waveWriter) { this.waveWriter = waveWriter; }
 
+    public RunTestsetController() {
+        state = TestsetRunState.STOPPED;
+    }
 
     //----------------------------- actions -------------------------------------------
-    public void StartStop() {
-        if (state == TestsetRunState.RUNNING) state = TestsetRunState.STOPPED;
-        if (state == TestsetRunState.STOPPED) state = TestsetRunState.RUNNING;
-        if (state == TestsetRunState.PAUSED) {
-            state = TestsetRunState.RUNNING;
+    public void Start() {
+        freqCursor.start();
+        //phaseCursor.start();
+        ampCursor.start();
+        state = TestsetRunState.RUNNING;
+    }
+
+    public void Stop() {
+        state = TestsetRunState.STOPPED;
+    }
+
+    public boolean isActive() {
+        if (state == TestsetRunState.STOPPED) return false;
+        else return true;
+    }
+
+    public void NextStep() {
+        ampCursor.next();
+        if (ampCursor.isNotEnd()) return;
+        else {
+            freqCursor.next();
+            if (freqCursor.isNotEnd())
+                ampCursor.start();
+            else
+                state = TestsetRunState.STOPPED;
         }
     }
 
