@@ -47,6 +47,7 @@ public class MainRunTestsetForm extends JFrame {
 
     public void setTestsetController(RunTestsetController testsetController) {
         this.testsetController = testsetController;
+        watchFreqCursorComponent.setFreqCursor(testsetController.getFreqCursor());
     }
 
     RunTestsetController testsetController;
@@ -70,6 +71,26 @@ public class MainRunTestsetForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) { onStartStop(); }
         });
+        checkUncheckButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                onCheckUncheck();
+            }
+        });
+        flipABButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                onFlipAB();
+            }
+        });
+    }
+
+    private void onCheckUncheck() {
+        testsetController.getFreqCursor().CheckCell();
+    }
+
+    private void onFlipAB() {
+        testsetController.getFreqCursor().switchPrimaryAxis();
     }
 
     private void onStartStop() {
@@ -146,6 +167,6 @@ public class MainRunTestsetForm extends JFrame {
         freqAminLabel.setText(String.valueOf(freqCursor.getMinFreqA()));
         freqBmaxLabel.setText(String.valueOf(freqCursor.getMaxFreqB()));
         freqBminLabel.setText(String.valueOf(freqCursor.getMinFreqB()));
-        //WatchFreqCursorComponent.setCurrentCell();
+        watchFreqCursorComponent.repaint();
     }
 }
