@@ -1,5 +1,8 @@
 package silence.rgbsound.client.forms;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import silence.rgbsound.client.control.AmpCursor;
 import silence.rgbsound.client.control.FreqCursor;
 import silence.rgbsound.client.control.PhaseCursor;
@@ -9,12 +12,14 @@ import silence.rgbsound.instrument.WaveMix;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainRunTestsetForm extends JFrame {
+public class MainRunTestsetForm extends JFrame implements ApplicationContextAware {
     private JTextField phaseStepCountTextField;
     private JCheckBox phaseONCheckBox;
     private JTextField phaseStepTextField;
@@ -44,6 +49,7 @@ public class MainRunTestsetForm extends JFrame {
     private JLabel freqBmaxLabel;
     private JLabel freqAminLabel;
     private JLabel freqAmaxLabel;
+    private JButton selectAnotherButton;
 
     public void setTestsetController(RunTestsetController testsetController) {
         this.testsetController = testsetController;
@@ -83,20 +89,71 @@ public class MainRunTestsetForm extends JFrame {
                 onFlipAB();
             }
         });
+        playPauseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                onPlayPause();
+            }
+        });
+        watchFreqCursorComponent.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                super.mouseClicked(mouseEvent);
+                onJumpToCell(mouseEvent.getX(), mouseEvent.getY());
+            }
+        });
+        nextAButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                onNextA();
+            }
+        });
+        nextBButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                onNextB();
+            }
+        });
+        selectAnotherButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                onGetNewTestset();
+            }
+        });
+    }
+
+    private void onGetNewTestset() {
+        PickTestsetForm dialog = ctx.getBean("pickTestsetDialog", PickTestsetForm.class);
+        dialog.pack();
+        dialog.setVisible(true);
     }
 
     private void onCheckUncheck() {
         testsetController.getFreqCursor().CheckCell();
+        watchFreqCursorComponent.repaint();
     }
 
     private void onFlipAB() {
         testsetController.getFreqCursor().switchPrimaryAxis();
+    }
+    private void onNextA() { testsetController.getFreqCursor().NextA(); }
+    private void onNextB() { testsetController.getFreqCursor().NextB(); }
+
+    private void onJumpToCell(int x, int y) {
+        if (testsetController == null) return;
+
+        int a = watchFreqCursorComponent.dispatchCellA(y);
+        int b = watchFreqCursorComponent.dispatchCellB(x);
+        testsetController.getFreqCursor().goToCell(a, b);
+
+        watchFreqCursorComponent.repaint();
     }
 
     private void onStartStop() {
         if (testsetController == null) return;
         if (testsetController.isActive()) {
             testsetController.Stop();
+            startStopButton.setText("restart");
             return;
         }
 
@@ -118,6 +175,40 @@ public class MainRunTestsetForm extends JFrame {
                 UpdateAmpFields(testsetController.getAmpCursor());
             }
         };
+        EnableDisablePauseOnlyButtons(false);
+        startStopButton.setText("stop");
+        playTask.execute();
+    }
+
+    private void onPlayPause() {
+        if (testsetController == null) return;
+        if (testsetController.isActive()) {
+            testsetController.Stop();
+            EnableDisablePauseOnlyButtons(true);
+            playPauseButton.setText("play");
+            return;
+        }
+
+        SwingWorker<Void, Integer> playTask = new SwingWorker<Void, Integer>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                testsetController.Play();
+                while (testsetController.isActive()) {
+                    publish(1);
+                    testsetController.PlayCurrentStepSound();
+                    testsetController.NextStep();
+                }
+                return null;
+            }
+            @Override
+            protected void process(List<Integer> arg) {
+                UpdateFreqFields(testsetController.getFreqCursor());
+                UpdatePhaseFields(testsetController.getPhaseCursor());
+                UpdateAmpFields(testsetController.getAmpCursor());
+            }
+        };
+        EnableDisablePauseOnlyButtons(false);
+        playPauseButton.setText("pause");
         playTask.execute();
     }
 
@@ -168,5 +259,16 @@ public class MainRunTestsetForm extends JFrame {
         freqBmaxLabel.setText(String.valueOf(freqCursor.getMaxFreqB()));
         freqBminLabel.setText(String.valueOf(freqCursor.getMinFreqB()));
         watchFreqCursorComponent.repaint();
+    }
+    private void EnableDisablePauseOnlyButtons(boolean enable) {
+        checkUncheckButton.setEnabled(enable);
+        playSoundButton.setEnabled(enable);
+        playReferenceButton.setEnabled(enable);
+    }
+
+    private ApplicationContext ctx;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        ctx = applicationContext;
     }
 }

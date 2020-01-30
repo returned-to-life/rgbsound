@@ -38,6 +38,12 @@ public class WatchFreqCursorComponent extends JComponent {
     public Dimension getPreferredSize() {
         return new Dimension(getUsualSize(), getUsualSize());
     }
+    public int dispatchCellA(int y) {
+        return y / CELL_SIZE;
+    }
+    public int dispatchCellB(int x) {
+        return x / CELL_SIZE;
+    }
 
     private void paintCellBorders(Graphics2D g2) {
         g2.setPaint(cellSplitColor);

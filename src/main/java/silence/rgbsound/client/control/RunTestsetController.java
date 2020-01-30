@@ -42,9 +42,14 @@ public class RunTestsetController {
 
     //----------------------------- actions -------------------------------------------
     public void Start() {
+        freqCursor.ClearCells();
         freqCursor.start();
         //phaseCursor.start();
         ampCursor.start();
+        state = TestsetRunState.RUNNING;
+    }
+
+    public void Play() {
         state = TestsetRunState.RUNNING;
     }
 

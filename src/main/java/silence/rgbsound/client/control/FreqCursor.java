@@ -79,6 +79,18 @@ public class FreqCursor {
             }
         }
     }
+    public void NextA() {
+        currentStepA += 1;
+        if (currentStepA >= stepCount) currentStepA = 0;
+    }
+    public void NextB() {
+        currentStepB += 1;
+        if (currentStepB >= stepCount) currentStepB = 0;
+    }
+    public void goToCell(int a, int b) {
+        if (a >= 0 && a < stepCount) currentStepA = a;
+        if (b >= 0 && b < stepCount) currentStepB = b;
+    }
 
     public void CheckCell() {
         cells.get(currentStepA).set(currentStepB, CellStatus.CHECKED);
