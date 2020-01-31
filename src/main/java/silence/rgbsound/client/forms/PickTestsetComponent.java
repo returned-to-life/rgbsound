@@ -1,5 +1,7 @@
 package silence.rgbsound.client.forms;
 
+import silence.rgbsound.client.control.PickTestsetController;
+import silence.rgbsound.link.CommunicatorMock;
 import silence.rgbsound.link.messages.TestsetMapResponce;
 
 import javax.swing.*;
@@ -41,10 +43,9 @@ public class PickTestsetComponent extends JComponent {
         catch (IllegalArgumentException ex) {}
         return new Color(cellColorR, cellColorG, cellColorB);
     }
-    TestsetMapResponce mapResponse;
-    public void setMapResponse(TestsetMapResponce mapResponse) {
-        this.mapResponse = mapResponse;
-    }
+
+    PickTestsetController controller;
+    public void setController(PickTestsetController controller) { this.controller = controller; }
 
     public PickTestsetComponent() {
         super();
@@ -56,10 +57,12 @@ public class PickTestsetComponent extends JComponent {
     public int getCellCountY() {
         return USUAL_HEIGHT / CELL_SIZE;
     }
-    private int firstShownCellIndexX = 0;
-    private int firstShownCellIndexY = 0;
-    private int currentCellIndexA = 0;
-    private int currentCellIndexB = 0;
+    public int dispatchCellA(int y) {
+        return y / CELL_SIZE;
+    }
+    public int dispatchCellB(int x) {
+        return x / CELL_SIZE;
+    }
 
     private void paintCellBorders(Graphics2D g2) {
         g2.setPaint(cellSplitColor);
@@ -75,25 +78,25 @@ public class PickTestsetComponent extends JComponent {
     }
 
     private void paintCells(Graphics2D g2) {
-        for (int x = 0; x < getCellCountX(); x++)
-            for (int y = 0; y < getCellCountY(); y++)
+        for (int b = 0; b < getCellCountX(); b++)
+            for (int a = 0; a < getCellCountY(); a++)
             {
-                g2.setColor(getCellColor(mapResponse.getCoverageMax(), mapResponse.getFoundMax(), mapResponse.getCell(x + firstShownCellIndexX, y + firstShownCellIndexY)));
-                g2.fill(new Rectangle2D.Double(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE));
+                g2.setColor(getCellColor(controller.getCoverageMax(), controller.getFoundMax(), controller.getCell(a, b)));
+                g2.fill(new Rectangle2D.Double(b * CELL_SIZE, a * CELL_SIZE, CELL_SIZE, CELL_SIZE));
             }
     }
 
     private void paintCurrentCell(Graphics2D g2) {
         g2.setPaint(cellSelectedColor);
-        g2.fill(new Rectangle2D.Double(currentCellIndexA * CELL_SIZE, currentCellIndexB * CELL_SIZE, CELL_SIZE, CELL_SIZE));
+        g2.fill(new Rectangle2D.Double(controller.getCurrentCellIndexB() * CELL_SIZE, controller.getCurrentCellIndexA() * CELL_SIZE, CELL_SIZE, CELL_SIZE));
         g2.setPaint(borderColor);
-        g2.draw(new Rectangle2D.Double(currentCellIndexA * CELL_SIZE, currentCellIndexB * CELL_SIZE, CELL_SIZE, CELL_SIZE));
+        g2.draw(new Rectangle2D.Double(controller.getCurrentCellIndexB() * CELL_SIZE, controller.getCurrentCellIndexA() * CELL_SIZE, CELL_SIZE, CELL_SIZE));
     }
 
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
-        if (mapResponse == null) {
+        if (controller == null) {
             paintCellBorders(g2);
             return;
         }

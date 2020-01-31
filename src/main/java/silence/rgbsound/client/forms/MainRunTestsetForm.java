@@ -122,6 +122,10 @@ public class MainRunTestsetForm extends JFrame implements ApplicationContextAwar
         });
     }
 
+    private void onLoadTestset() {
+
+    }
+
     private void onGetNewTestset() {
         PickTestsetForm dialog = ctx.getBean("pickTestsetDialog", PickTestsetForm.class);
         dialog.pack();
@@ -129,7 +133,7 @@ public class MainRunTestsetForm extends JFrame implements ApplicationContextAwar
     }
 
     private void onCheckUncheck() {
-        testsetController.getFreqCursor().CheckCell();
+        testsetController.getFreqCursor().ToogleCheckCell();
         watchFreqCursorComponent.repaint();
     }
 

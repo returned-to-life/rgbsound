@@ -1,0 +1,77 @@
+package silence.rgbsound.client.control;
+
+import silence.rgbsound.link.CommunicatorMock;
+import silence.rgbsound.link.messages.TestsetMapResponce;
+
+public class PickTestsetController {
+
+    CommunicatorMock communicator;
+    public void setCommunicator(CommunicatorMock communicator) {
+        this.communicator = communicator;
+    }
+
+    TestsetMapResponce mapResponse;
+
+    public void reloadTestsetMap() {
+        this.mapResponse = communicator.GetTestsetMap(1);
+    }
+
+    private int firstShownCellIndexB = 0;
+    private int firstShownCellIndexA = 0;
+    private int currentCellIndexA = 0;
+    private int currentCellIndexB = 0;
+
+    public int getFirstShownCellIndexB() {
+        return firstShownCellIndexB;
+    }
+
+    public void setFirstShownCellIndexB(int firstShownCellIndexB) {
+        this.firstShownCellIndexB = firstShownCellIndexB;
+    }
+
+    public int getFirstShownCellIndexA() {
+        return firstShownCellIndexA;
+    }
+
+    public void setFirstShownCellIndexA(int firstShownCellIndexA) {
+        this.firstShownCellIndexA = firstShownCellIndexA;
+    }
+
+    public int getCurrentCellIndexA() {
+        return currentCellIndexA;
+    }
+
+    public void setCurrentCellIndexA(int currentCellIndexA) {
+        this.currentCellIndexA = currentCellIndexA;
+    }
+
+    public int getCurrentCellIndexB() {
+        return currentCellIndexB;
+    }
+
+    public void setCurrentCellIndexB(int currentCellIndexB) {
+        this.currentCellIndexB = currentCellIndexB;
+    }
+
+    public int getCoverageMax() {
+        if (mapResponse == null) return 1;
+        return mapResponse.getCoverageMax();
+    }
+    public int getFoundMax() {
+        if (mapResponse == null) return 1;
+        return mapResponse.getFoundMax();
+    }
+    public TestsetMapResponce.TestsetMapCell getCell(int a, int b) {
+        if (mapResponse == null)
+            return TestsetMapResponce.getEmptyCell();
+        return mapResponse.getCell(firstShownCellIndexA + a, firstShownCellIndexB + b);
+    }
+    public double getMinFreq() {
+        if (mapResponse == null) return 0;
+        return mapResponse.getCell(0,0).getStartFreqA();
+    }
+    public double getMaxFreq() {
+        if (mapResponse == null) return 0;
+        return mapResponse.getCell(mapResponse.getSizeAB() - 1, mapResponse.getSizeAB() - 1).getStartFreqA();
+    }
+}

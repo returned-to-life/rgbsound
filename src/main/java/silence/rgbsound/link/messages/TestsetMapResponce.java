@@ -7,7 +7,7 @@ import java.util.ArrayList;
 @Component
 public class TestsetMapResponce {
 
-    public class TestsetMapCell {
+    public static class TestsetMapCell {
         double startFreqA = 0.0;
         double startFreqB = 0.0;
         int coverageCount = 0;
@@ -43,7 +43,11 @@ public class TestsetMapResponce {
     int foundMax;
     int sizeAB;
     ArrayList<ArrayList<TestsetMapCell>> mapSquare;
-    TestsetMapCell emptyCell;
+    static TestsetMapCell emptyCell;
+    public static TestsetMapCell getEmptyCell() {
+        if (emptyCell == null) emptyCell = new TestsetMapCell();
+        return emptyCell;
+    }
 
     public TestsetMapResponce(int sizeAB, int stepWidth, double stepFactor, int coverageMax, int foundMax) {
         this.sizeAB = sizeAB;
@@ -60,11 +64,11 @@ public class TestsetMapResponce {
         this.coverageMax = coverageMax;
         this.foundMax = foundMax;
 
-        emptyCell = new TestsetMapCell();
+        //emptyCell = new TestsetMapCell();
     }
 
     public TestsetMapCell getCell(int indexA, int indexB) {
-        if (indexA > indexB || indexA >= sizeAB || indexB >= sizeAB) return emptyCell;
+        if (indexA > indexB || indexA >= sizeAB || indexB >= sizeAB) return getEmptyCell();
         return mapSquare.get(indexA).get(sizeAB - indexB - 1);
     }
 
@@ -79,5 +83,8 @@ public class TestsetMapResponce {
 
     public int getFoundMax() {
         return foundMax;
+    }
+    public int getSizeAB() {
+        return sizeAB;
     }
 }

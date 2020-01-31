@@ -92,9 +92,15 @@ public class FreqCursor {
         if (b >= 0 && b < stepCount) currentStepB = b;
     }
 
-    public void CheckCell() {
-        cells.get(currentStepA).set(currentStepB, CellStatus.CHECKED);
+    public void ToogleCheckCell() {
+        if (cells.get(currentStepA).get(currentStepB) == CellStatus.CHECKED) {
+            cells.get(currentStepA).set(currentStepB, CellStatus.VISITED);
+        }
+        else {
+            cells.get(currentStepA).set(currentStepB, CellStatus.CHECKED);
+        }
     }
+
     public void VisitCell() {
         if (cells.get(currentStepA).get(currentStepB) == CellStatus.DEFAULT)
             cells.get(currentStepA).set(currentStepB, CellStatus.VISITED);

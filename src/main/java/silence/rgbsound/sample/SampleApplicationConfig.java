@@ -5,10 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 import silence.rgbsound.audio.PlaySound;
-import silence.rgbsound.client.control.AmpCursor;
-import silence.rgbsound.client.control.FreqCursor;
-import silence.rgbsound.client.control.PhaseCursor;
-import silence.rgbsound.client.control.RunTestsetController;
+import silence.rgbsound.client.control.*;
 import silence.rgbsound.client.forms.MainRunTestsetForm;
 import silence.rgbsound.client.forms.PickTestsetForm;
 import silence.rgbsound.link.CommunicatorMock;
@@ -28,12 +25,19 @@ public class SampleApplicationConfig {
     @Scope(value="prototype")
     public PickTestsetForm pickTestsetDialog() {
         PickTestsetForm dialog = new PickTestsetForm();
-        dialog.setCommunicator(communicator());
+        dialog.setController(pickController());
         return dialog;
         /*
         PickTestsetForm dialog = ctx.getBean("pickTestsetDialog", PickTestsetForm.class);
         dialog.pack();
         dialog.setVisible(true);*/
+    }
+
+    @Bean
+    public PickTestsetController pickController() {
+        PickTestsetController ctrl = new PickTestsetController();
+        ctrl.setCommunicator(communicator());
+        return ctrl;
     }
 
     @Bean
