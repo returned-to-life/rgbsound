@@ -28,6 +28,8 @@ public class PickTestsetForm extends JDialog {
     private JLabel labelMinShownBFreq;
     private JLabel labelMaxShownBFreq;
     private JLabel labelFounds;
+    private JLabel labelMinShownAFreq;
+    private JLabel labelMaxShownAFreq;
 
     public PickTestsetForm() {
         setContentPane(contentPane);
@@ -73,6 +75,18 @@ public class PickTestsetForm extends JDialog {
                 onSelectTestset(mouseEvent.getX(), mouseEvent.getY());
             }
         });
+        scrollBar2.addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent adjustmentEvent) {
+                onAdjustA(adjustmentEvent.getValue());
+            }
+        });
+        scrollBar1.addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent adjustmentEvent) {
+                onAdjustB(adjustmentEvent.getValue());
+            }
+        });
     }
 
     PickTestsetController controller;
@@ -94,25 +108,30 @@ public class PickTestsetForm extends JDialog {
 
     private void onReload() {
         controller.reloadTestsetMap();
-
-        minFreqLabel.setText(String.valueOf(Math.round(controller.getMinFreq())));
-        maxFreqLabel1.setText(String.valueOf(Math.round(controller.getMaxFreq())));
-        maxFreqLabel2.setText(String.valueOf(Math.round(controller.getMaxFreq())));
+        SetFreqLabels();
         repaint();
     }
-
+    private void onAdjustA(int adjustValue) {
+        if (controller == null) return;
+        controller.adjustA(adjustValue, pickTestsetComponent1.getCellCountY());
+        SetFreqLabels();
+        SetSelectedTestsetLabels(controller.getCurrentCellIndexA(), controller.getCurrentCellIndexB());
+        repaint();
+    }
+    private void onAdjustB(int adjustValue) {
+        if (controller == null) return;
+        controller.adjustB(adjustValue, pickTestsetComponent1.getCellCountX());
+        SetFreqLabels();
+        SetSelectedTestsetLabels(controller.getCurrentCellIndexA(), controller.getCurrentCellIndexB());
+        repaint();
+    }
     private void onSelectTestset(int x, int y) {
         int a = pickTestsetComponent1.dispatchCellA(y);
         int b = pickTestsetComponent1.dispatchCellB(x);
         controller.setCurrentCellIndexA(a);
         controller.setCurrentCellIndexB(b);
 
-        TestsetMapResponce.TestsetMapCell cell = controller.getCell(a, b);
-        labelFreqA.setText("Freq A: " + String.format("%.2f", cell.getStartFreqA()));
-        labelFreqB.setText("Freq B: " + String.format("%.2f", cell.getStartFreqB()));
-        labelCoverage.setText("Tested " + String.valueOf(cell.getCoverageCount()) + " times");
-        labelFounds.setText("Founds: " + String.valueOf(cell.getFoundCount()));
-
+        SetSelectedTestsetLabels(a, b);
         repaint();
     }
 
@@ -120,4 +139,25 @@ public class PickTestsetForm extends JDialog {
         // TODO: place custom component creation code here
     }
 
+    private void SetFreqLabels() {
+        minFreqLabel.setText(String.valueOf(Math.round(controller.getMinFreq())));
+        maxFreqLabel1.setText(String.valueOf(Math.round(controller.getMaxFreq())));
+        maxFreqLabel2.setText(String.valueOf(Math.round(controller.getMaxFreq())));
+
+        TestsetMapResponce.TestsetMapCell topCell = controller.getCell(0, 0);
+        TestsetMapResponce.TestsetMapCell bottomCell = controller.getCell(pickTestsetComponent1.getCellCountY() -1, pickTestsetComponent1.getCellCountX() - 1);
+        labelMaxShownAFreq.setText(String.valueOf(Math.round(bottomCell.getStartFreqA())));
+        labelMinShownAFreq.setText(String.valueOf(Math.round(topCell.getStartFreqA())));
+        labelMaxShownBFreq.setText(String.valueOf(Math.round(bottomCell.getStartFreqB())));
+        labelMinShownBFreq.setText(String.valueOf(Math.round(topCell.getStartFreqB())));
+    }
+
+    private void SetSelectedTestsetLabels(int a, int b)
+    {
+        TestsetMapResponce.TestsetMapCell cell = controller.getCell(a, b);
+        labelFreqA.setText("Freq A: " + String.format("%.2f", cell.getStartFreqA()));
+        labelFreqB.setText("Freq B: " + String.format("%.2f", cell.getStartFreqB()));
+        labelCoverage.setText("Tested " + String.valueOf(cell.getCoverageCount()) + " times");
+        labelFounds.setText("Founds: " + String.valueOf(cell.getFoundCount()));
+    }
 }

@@ -74,4 +74,20 @@ public class PickTestsetController {
         if (mapResponse == null) return 0;
         return mapResponse.getCell(mapResponse.getSizeAB() - 1, mapResponse.getSizeAB() - 1).getStartFreqA();
     }
+    public void adjustA(int adjustValue, int cellCountY) {
+        final int maxAdjustValue = 100;
+        if (adjustValue > maxAdjustValue )
+            adjustValue = maxAdjustValue;
+        if (adjustValue < 0 )
+            adjustValue = 0;
+        this.firstShownCellIndexA = (int) Math.round((Double.valueOf(adjustValue) / maxAdjustValue) * (mapResponse.getSizeAB() - cellCountY));
+    }
+    public void adjustB(int adjustValue, int cellCountX) {
+        final int maxAdjustValue = 100;
+        if (adjustValue > maxAdjustValue )
+            adjustValue = maxAdjustValue;
+        if (adjustValue < 0 )
+            adjustValue = 0;
+        this.firstShownCellIndexB = (int) Math.round((Double.valueOf(adjustValue) / maxAdjustValue) * (mapResponse.getSizeAB() - cellCountX));
+    }
 }
