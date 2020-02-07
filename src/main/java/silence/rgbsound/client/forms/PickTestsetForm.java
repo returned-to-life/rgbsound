@@ -1,14 +1,14 @@
 package silence.rgbsound.client.forms;
 
+import org.springframework.beans.factory.InitializingBean;
 import silence.rgbsound.client.control.PickTestsetController;
-import silence.rgbsound.link.CommunicatorMock;
+import silence.rgbsound.client.control.Testset;
 import silence.rgbsound.link.messages.TestsetMapResponce;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
-public class PickTestsetForm extends JDialog {
+public class PickTestsetForm extends JDialog implements InitializingBean {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -20,8 +20,8 @@ public class PickTestsetForm extends JDialog {
     private JLabel labelCoverage;
     private JPanel panelTestsetPicker;
     private PickTestsetComponent pickTestsetComponent1;
-    private JScrollBar scrollBar1;
-    private JScrollBar scrollBar2;
+    private JScrollBar scrollBarB;
+    private JScrollBar scrollBarA;
     private JLabel minFreqLabel;
     private JLabel maxFreqLabel1;
     private JLabel maxFreqLabel2;
@@ -75,13 +75,13 @@ public class PickTestsetForm extends JDialog {
                 onSelectTestset(mouseEvent.getX(), mouseEvent.getY());
             }
         });
-        scrollBar2.addAdjustmentListener(new AdjustmentListener() {
+        scrollBarA.addAdjustmentListener(new AdjustmentListener() {
             @Override
             public void adjustmentValueChanged(AdjustmentEvent adjustmentEvent) {
                 onAdjustA(adjustmentEvent.getValue());
             }
         });
-        scrollBar1.addAdjustmentListener(new AdjustmentListener() {
+        scrollBarB.addAdjustmentListener(new AdjustmentListener() {
             @Override
             public void adjustmentValueChanged(AdjustmentEvent adjustmentEvent) {
                 onAdjustB(adjustmentEvent.getValue());
@@ -94,6 +94,16 @@ public class PickTestsetForm extends JDialog {
     public void setController(PickTestsetController controller) {
         this.controller = controller;
         pickTestsetComponent1.setController(controller);
+    }
+
+    public void onLoad() {
+        onAdjustA(scrollBarA.getValue());
+        onAdjustB(scrollBarB.getValue());
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+
     }
 
     private void onOK() {
@@ -109,11 +119,12 @@ public class PickTestsetForm extends JDialog {
     private void onReload() {
         controller.reloadTestsetMap();
         SetFreqLabels();
+        SetSelectedTestsetLabels(controller.getCurrentCellIndexA(), controller.getCurrentCellIndexB());
         repaint();
     }
     private void onAdjustA(int adjustValue) {
         if (controller == null) return;
-        controller.adjustA(adjustValue, pickTestsetComponent1.getCellCountY());
+        controller.adjustA(adjustValue, scrollBarA.getMaximum(), pickTestsetComponent1.getCellCountY());
         SetFreqLabels();
         SetSelectedTestsetLabels(controller.getCurrentCellIndexA(), controller.getCurrentCellIndexB());
         repaint();
@@ -130,7 +141,6 @@ public class PickTestsetForm extends JDialog {
         int b = pickTestsetComponent1.dispatchCellB(x);
         controller.setCurrentCellIndexA(a);
         controller.setCurrentCellIndexB(b);
-
         SetSelectedTestsetLabels(a, b);
         repaint();
     }
@@ -159,5 +169,10 @@ public class PickTestsetForm extends JDialog {
         labelFreqB.setText("Freq B: " + String.format("%.2f", cell.getStartFreqB()));
         labelCoverage.setText("Tested " + String.valueOf(cell.getCoverageCount()) + " times");
         labelFounds.setText("Founds: " + String.valueOf(cell.getFoundCount()));
+    }
+
+    public Testset getResult() {
+        if (controller == null) return new Testset(8, 15.0,440.0, 640.0, 1,0);
+        return controller.getCurrentAsTestset();
     }
 }

@@ -17,7 +17,7 @@ public class PickTestsetComponent extends JComponent {
     final int CELL_SIZE = 16;
     final Color borderColor = new Color(20, 20,20);
     final Color cellSplitColor = new Color(160,160,160);
-    final Color cellSelectedColor = new Color(230, 250, 50);
+    final Color cellSelectedColor = new Color(245, 255, 150);
 
     final int cellColorR = 80;
     final int cellColorGMin = 100;

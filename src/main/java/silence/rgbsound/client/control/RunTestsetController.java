@@ -40,6 +40,11 @@ public class RunTestsetController {
         state = TestsetRunState.STOPPED;
     }
 
+    public void LoadTestset(Testset testset) {
+        setFreqCursor(new FreqCursor(testset.getStartFreqA(), testset.getStartFreqB(), testset.getStepCount(), testset.getStepSize()));
+        setPhaseCursor(new PhaseCursor());
+        Stop();
+    }
     //----------------------------- actions -------------------------------------------
     public void Start() {
         freqCursor.ClearCells();

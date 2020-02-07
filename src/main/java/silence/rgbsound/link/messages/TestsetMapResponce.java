@@ -87,4 +87,6 @@ public class TestsetMapResponce {
     public int getSizeAB() {
         return sizeAB;
     }
+    public int getStepWidth() { return stepWidth; }
+    public double getStepFactor() { return stepFactor; }
 }

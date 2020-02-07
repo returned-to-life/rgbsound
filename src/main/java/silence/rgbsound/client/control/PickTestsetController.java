@@ -8,9 +8,11 @@ public class PickTestsetController {
     CommunicatorMock communicator;
     public void setCommunicator(CommunicatorMock communicator) {
         this.communicator = communicator;
+        this.mapResponse = communicator.GetTestsetMap(1);
     }
 
     TestsetMapResponce mapResponse;
+    public void setMapResponse(TestsetMapResponce mapResponse) { this.mapResponse = mapResponse; }
 
     public void reloadTestsetMap() {
         this.mapResponse = communicator.GetTestsetMap(1);
@@ -74,10 +76,7 @@ public class PickTestsetController {
         if (mapResponse == null) return 0;
         return mapResponse.getCell(mapResponse.getSizeAB() - 1, mapResponse.getSizeAB() - 1).getStartFreqA();
     }
-    public void adjustA(int adjustValue, int cellCountY) {
-        final int maxAdjustValue = 100;
-        if (adjustValue > maxAdjustValue )
-            adjustValue = maxAdjustValue;
+    public void adjustA(int adjustValue, int maxAdjustValue, int cellCountY) {
         if (adjustValue < 0 )
             adjustValue = 0;
         this.firstShownCellIndexA = (int) Math.round((Double.valueOf(adjustValue) / maxAdjustValue) * (mapResponse.getSizeAB() - cellCountY));
@@ -89,5 +88,9 @@ public class PickTestsetController {
         if (adjustValue < 0 )
             adjustValue = 0;
         this.firstShownCellIndexB = (int) Math.round((Double.valueOf(adjustValue) / maxAdjustValue) * (mapResponse.getSizeAB() - cellCountX));
+    }
+    public Testset getCurrentAsTestset() {
+        TestsetMapResponce.TestsetMapCell cell = getCell(currentCellIndexA, currentCellIndexB);
+        return new Testset(mapResponse.getStepWidth(), mapResponse.getStepFactor(), cell.getStartFreqA(), cell.getStartFreqB(), cell.getCoverageCount(), cell.getFoundCount());
     }
 }

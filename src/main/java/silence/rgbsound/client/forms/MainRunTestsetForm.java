@@ -3,10 +3,7 @@ package silence.rgbsound.client.forms;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import silence.rgbsound.client.control.AmpCursor;
-import silence.rgbsound.client.control.FreqCursor;
-import silence.rgbsound.client.control.PhaseCursor;
-import silence.rgbsound.client.control.RunTestsetController;
+import silence.rgbsound.client.control.*;
 import silence.rgbsound.instrument.Wave;
 import silence.rgbsound.instrument.WaveMix;
 
@@ -122,14 +119,20 @@ public class MainRunTestsetForm extends JFrame implements ApplicationContextAwar
         });
     }
 
-    private void onLoadTestset() {
+    public void onLoad() {
+        if (testsetController == null) return;
 
+        UpdateAmpFields(testsetController.getAmpCursor());
+        UpdatePhaseFields(testsetController.getPhaseCursor());
+        UpdateFreqFields(testsetController.getFreqCursor());
+        EnableDisablePauseOnlyButtons(false);
+        repaint();
     }
 
     private void onGetNewTestset() {
-        PickTestsetForm dialog = ctx.getBean("pickTestsetDialog", PickTestsetForm.class);
-        dialog.pack();
-        dialog.setVisible(true);
+        Testset testset = ctx.getBean("testset", Testset.class);
+        testsetController.LoadTestset(testset);
+        onLoad();
     }
 
     private void onCheckUncheck() {
@@ -256,12 +259,12 @@ public class MainRunTestsetForm extends JFrame implements ApplicationContextAwar
         phaseValueTextField.setText(String.valueOf(phaseCursor.getPhase()));
     }
     private void UpdateFreqFields(FreqCursor freqCursor) {
-        freqATextField.setText(String.valueOf(freqCursor.getFreqA()));
-        freqBTextField.setText(String.valueOf(freqCursor.getFreqB()));
-        freqAmaxLabel.setText(String.valueOf(freqCursor.getMaxFreqA()));
-        freqAminLabel.setText(String.valueOf(freqCursor.getMinFreqA()));
-        freqBmaxLabel.setText(String.valueOf(freqCursor.getMaxFreqB()));
-        freqBminLabel.setText(String.valueOf(freqCursor.getMinFreqB()));
+        freqATextField.setText(String.format("%.4f",freqCursor.getFreqA()));
+        freqBTextField.setText(String.format("%.4f",freqCursor.getFreqB()));
+        freqAmaxLabel.setText(String.format("%.2f", freqCursor.getMaxFreqA()));
+        freqAminLabel.setText(String.format("%.2f", freqCursor.getMinFreqA()));
+        freqBmaxLabel.setText(String.format("%.2f",freqCursor.getMaxFreqB()));
+        freqBminLabel.setText(String.format("%.2f",freqCursor.getMinFreqB()));
         watchFreqCursorComponent.repaint();
     }
     private void EnableDisablePauseOnlyButtons(boolean enable) {

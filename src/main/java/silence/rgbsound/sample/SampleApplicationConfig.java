@@ -18,7 +18,14 @@ public class SampleApplicationConfig {
     public MainRunTestsetForm testsetForm() {
         MainRunTestsetForm mtf = new MainRunTestsetForm();
         mtf.setTestsetController(controller());
+        mtf.onLoad();
         return mtf;
+    }
+
+    @Bean
+    @Scope(value = "prototype")
+    public Testset testset() {
+        return pickTestsetDialog().getResult();
     }
 
     @Bean
@@ -26,11 +33,10 @@ public class SampleApplicationConfig {
     public PickTestsetForm pickTestsetDialog() {
         PickTestsetForm dialog = new PickTestsetForm();
         dialog.setController(pickController());
-        return dialog;
-        /*
-        PickTestsetForm dialog = ctx.getBean("pickTestsetDialog", PickTestsetForm.class);
+        dialog.onLoad();
         dialog.pack();
-        dialog.setVisible(true);*/
+        dialog.setVisible(true);
+        return dialog;
     }
 
     @Bean
@@ -55,19 +61,13 @@ public class SampleApplicationConfig {
     @Bean
     public RunTestsetController controller() {
         RunTestsetController control = new RunTestsetController();
-        control.setFreqCursor(freqs());
+        control.LoadTestset(testset());
         control.setAmpCursor(new AmpCursor(8000));
-        control.setPhaseCursor(new PhaseCursor());
-        control.setProjectRate(44100);
         control.setProjectMaxAmp(8000);
+        control.setProjectRate(44100);
         control.setPlaySound(player());
         control.setWaveWriter(waveWriter());
         return control;
-    }
-
-    @Bean
-    public FreqCursor freqs() {
-        return new FreqCursor(440.0, 630.0, 8, 15.0);
     }
 
     @Bean
