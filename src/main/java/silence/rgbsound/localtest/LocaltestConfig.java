@@ -1,4 +1,4 @@
-package silence.rgbsound.sample;
+package silence.rgbsound.localtest;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,7 @@ import silence.rgbsound.link.CommunicatorMockRandom;
 import silence.rgbsound.wavefile.WaveFileWriter;
 
 @Configuration
-public class SampleApplicationConfig {
+public class LocaltestConfig {
 
     @Bean
     public MainRunTestsetForm testsetForm() {

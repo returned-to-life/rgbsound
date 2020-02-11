@@ -1,17 +1,19 @@
-package silence.rgbsound.sample;
+package silence.rgbsound.localtest;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import silence.rgbsound.client.forms.MainRunTestsetForm;
-import silence.rgbsound.client.forms.PickTestsetForm;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SampleApplication {
+@SpringBootApplication
+public class LocaltestApplication {
 
     public static void main(String[] args) {
-        ApplicationContext ctx = new AnnotationConfigApplicationContext(SampleApplicationConfig.class);
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(LocaltestConfig.class);
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {

@@ -1,13 +1,13 @@
-package silence.rgbsound.sample;
+package silence.rgbsound.client.control;
 
 import org.springframework.stereotype.Component;
 
 @Component
 public class CoverageCounter {
-   /**
-    * calculation of quantity and parameters of testsets
-    * within given range of Frequencies and necessary precision
-   **/
+    /**
+     * calculation of quantity and parameters of testsets
+     * within given range of Frequencies and necessary precision
+     **/
     public static int countLength(double StartFreq, double EndFreq, int stepWidth, double stepFactor) {
         int result = 0;
         double curFreq = StartFreq;

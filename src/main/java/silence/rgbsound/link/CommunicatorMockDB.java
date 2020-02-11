@@ -1,8 +1,8 @@
 package silence.rgbsound.link;
 
 import org.springframework.stereotype.Service;
+import silence.rgbsound.client.control.CoverageCounter;
 import silence.rgbsound.link.messages.TestsetMapResponce;
-import silence.rgbsound.sample.CoverageCounter;
 
 @Service
 public class CommunicatorMockDB {
