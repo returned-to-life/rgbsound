@@ -1,7 +1,6 @@
 package silence.rgbsound.client.forms;
 
 import silence.rgbsound.client.control.PickTestsetController;
-import silence.rgbsound.link.CommunicatorMock;
 import silence.rgbsound.link.messages.TestsetMapResponce;
 
 import javax.swing.*;

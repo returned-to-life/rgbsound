@@ -2,13 +2,12 @@ package silence.rgbsound.sample;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 import silence.rgbsound.audio.PlaySound;
 import silence.rgbsound.client.control.*;
 import silence.rgbsound.client.forms.MainRunTestsetForm;
 import silence.rgbsound.client.forms.PickTestsetForm;
-import silence.rgbsound.link.CommunicatorMock;
+import silence.rgbsound.link.CommunicatorMockRandom;
 import silence.rgbsound.wavefile.WaveFileWriter;
 
 @Configuration
@@ -47,8 +46,8 @@ public class SampleApplicationConfig {
     }
 
     @Bean
-    public CommunicatorMock communicator() {
-        CommunicatorMock comm = new CommunicatorMock();
+    public CommunicatorMockRandom communicator() {
+        CommunicatorMockRandom comm = new CommunicatorMockRandom();
         comm.setCoverageCounter(counter());
         return comm;
     }

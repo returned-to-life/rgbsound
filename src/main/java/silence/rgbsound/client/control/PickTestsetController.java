@@ -1,12 +1,12 @@
 package silence.rgbsound.client.control;
 
-import silence.rgbsound.link.CommunicatorMock;
+import silence.rgbsound.link.CommunicatorMockRandom;
 import silence.rgbsound.link.messages.TestsetMapResponce;
 
 public class PickTestsetController {
 
-    CommunicatorMock communicator;
-    public void setCommunicator(CommunicatorMock communicator) {
+    CommunicatorMockRandom communicator;
+    public void setCommunicator(CommunicatorMockRandom communicator) {
         this.communicator = communicator;
         this.mapResponse = communicator.GetTestsetMap(1);
     }
