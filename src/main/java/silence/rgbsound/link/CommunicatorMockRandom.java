@@ -5,7 +5,7 @@ import silence.rgbsound.client.control.CoverageCounter;
 import silence.rgbsound.link.messages.TestsetMapResponce;
 
 @Service
-public class CommunicatorMockRandom {
+public class CommunicatorMockRandom implements Communicator {
 
     CoverageCounter counter;
     public void setCoverageCounter(CoverageCounter counter) {

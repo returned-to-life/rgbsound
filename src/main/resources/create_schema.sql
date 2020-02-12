@@ -1,9 +1,5 @@
-CREATE USER 'rgbuser'@'localhost' IDENTIFIED BY 'rgbpass';
-
-CREATE SCHEMA rgbdb;
-
-GRANT ALL PRIVILEGES ON rgbdb.* TO 'rgbuser'@'localhost';
-FLUSH PRIVILEGES;
+CREATE USER rgbuser PASSWORD 'rgbpass' ADMIN;
+CREATE SCHEMA rgbdb AUTHORIZATION rgbuser;
 
 CREATE TABLE coverage_map
 (
