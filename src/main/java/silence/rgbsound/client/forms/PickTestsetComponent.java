@@ -17,6 +17,7 @@ public class PickTestsetComponent extends JComponent {
     final Color borderColor = new Color(20, 20,20);
     final Color cellSplitColor = new Color(160,160,160);
     final Color cellSelectedColor = new Color(245, 255, 150);
+    final Color cellEmptyColor = new Color(60, 80, 80);
 
     final int cellColorR = 80;
     final int cellColorGMin = 100;
@@ -30,16 +31,17 @@ public class PickTestsetComponent extends JComponent {
     final Color cellColor4 = new Color(cellColorR,cellColorGMax,cellColorBMax);
 
     public Color getCellColor(int coverageMax, int foundMax, TestsetMapResponce.TestsetMapCell cell) {
+        if (cell.isEmpty())
+            return cellEmptyColor;
+
         int cellColorG = cellColorGMin;
-        try {
+        if (foundMax > 0) {
             cellColorG += (cellColorGMax - cellColorGMin) * (Double.valueOf(cell.getFoundCount()) / Double.valueOf(foundMax));
         }
-        catch (IllegalArgumentException ex) {}
         int cellColorB = cellColorBMin;
-        try {
+        if (coverageMax > 0) {
             cellColorB += (cellColorBMax - cellColorBMin) * (Double.valueOf(cell.getCoverageCount()) / Double.valueOf(coverageMax));
         }
-        catch (IllegalArgumentException ex) {}
         return new Color(cellColorR, cellColorG, cellColorB);
     }
 

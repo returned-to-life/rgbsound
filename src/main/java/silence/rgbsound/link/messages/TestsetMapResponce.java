@@ -35,6 +35,8 @@ public class TestsetMapResponce {
         public int getFoundCount() {
             return foundCount;
         }
+
+        public boolean isEmpty() { return (startFreqA == 0.0 && startFreqB == 0.0); }
     }
 
     int stepWidth;
