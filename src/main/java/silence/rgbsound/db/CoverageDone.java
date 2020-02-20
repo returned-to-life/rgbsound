@@ -2,6 +2,7 @@ package silence.rgbsound.db;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 public class CoverageDone implements Serializable {
     public long getId() {
@@ -67,4 +68,13 @@ public class CoverageDone implements Serializable {
     long userId;
     Date timestamp;
     String comment;
+
+    public void setFounds(List<Found> founds) {
+        this.founds = founds;
+    }
+    public List<Found> getFounds() {
+        return this.founds;
+    }
+
+    List<Found> founds;
 }

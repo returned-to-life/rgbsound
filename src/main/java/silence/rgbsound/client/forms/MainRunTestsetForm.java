@@ -4,8 +4,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import silence.rgbsound.client.control.*;
+import silence.rgbsound.db.CoverageDone;
+import silence.rgbsound.db.Found;
 import silence.rgbsound.instrument.Wave;
 import silence.rgbsound.instrument.WaveMix;
+import silence.rgbsound.link.Communicator;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -58,40 +61,12 @@ public class MainRunTestsetForm extends JFrame implements ApplicationContextAwar
     public MainRunTestsetForm() {
         setContentPane(panelOne);
 
-        playSoundButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                onPlaySound();
-            }
-        });
-        playReferenceButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                onPlayReference();
-            }
-        });
-        startStopButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) { onStartStop(); }
-        });
-        checkUncheckButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                onCheckUncheck();
-            }
-        });
-        flipABButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                onFlipAB();
-            }
-        });
-        playPauseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                onPlayPause();
-            }
-        });
+        playSoundButton.addActionListener(actionEvent -> onPlaySound());
+        playReferenceButton.addActionListener(actionEvent -> onPlayReference());
+        startStopButton.addActionListener(actionEvent -> onStartStop());
+        checkUncheckButton.addActionListener(actionEvent -> onCheckUncheck());
+        flipABButton.addActionListener(actionEvent -> onFlipAB());
+        playPauseButton.addActionListener(actionEvent -> onPlayPause());
         watchFreqCursorComponent.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -99,28 +74,15 @@ public class MainRunTestsetForm extends JFrame implements ApplicationContextAwar
                 onJumpToCell(mouseEvent.getX(), mouseEvent.getY());
             }
         });
-        nextAButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                onNextA();
-            }
-        });
-        nextBButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                onNextB();
-            }
-        });
-        selectAnotherButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                onGetNewTestset();
-            }
-        });
+        nextAButton.addActionListener(actionEvent -> onNextA());
+        nextBButton.addActionListener(actionEvent -> onNextB());
+        selectAnotherButton.addActionListener(actionEvent -> onGetNewTestset());
+        makeDecisionButton.addActionListener(actionEvent -> onMakeDecision());
     }
 
     public void onLoad() {
         if (testsetController == null) return;
+        testsetController.Stop();
 
         UpdateAmpFields(testsetController.getAmpCursor());
         UpdatePhaseFields(testsetController.getPhaseCursor());
@@ -243,6 +205,22 @@ public class MainRunTestsetForm extends JFrame implements ApplicationContextAwar
 
     private void onPlayReference() {
         if (testsetController != null) testsetController.PlayReferenceSound();
+    }
+    private void onMakeDecision() {
+        if (testsetController == null) return;
+
+        testsetController.Stop();
+        MakeDecisionForm mdf = ctx.getBean("decisionForm", MakeDecisionForm.class);
+        List<Found> founds = testsetController.getFreqCursor().getAllChecked();
+        CoverageDone testsetInfo = testsetController.getTestsetInfo();
+        mdf.setTestsetInfo(testsetInfo, founds);
+        mdf.pack();
+        mdf.setVisible(true);
+        if ( mdf.getDialogWasCanceled() ) return;
+
+        Testset testset = ctx.getBean("testset", Testset.class);
+        testsetController.LoadTestset(testset);
+        onLoad();
     }
 
     private void UpdateAmpFields(AmpCursor ampCursor) {

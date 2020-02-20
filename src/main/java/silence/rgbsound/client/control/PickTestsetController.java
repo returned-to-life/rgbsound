@@ -92,6 +92,17 @@ public class PickTestsetController {
     }
     public Testset getCurrentAsTestset() {
         TestsetMapResponce.TestsetMapCell cell = getCell(currentCellIndexA, currentCellIndexB);
-        return new Testset(mapResponse.getStepWidth(), mapResponse.getStepFactor(), cell.getStartFreqA(), cell.getStartFreqB(), cell.getCoverageCount(), cell.getFoundCount());
+        Testset ts = new Testset();
+        ts.setStepSize(mapResponse.getStepFactor());
+        ts.setStepCount(mapResponse.getStepWidth());
+        ts.setStartFreqA(cell.getStartFreqA());
+        ts.setStartFreqB(cell.getStartFreqB());
+        ts.setCoverageCount(cell.getCoverageCount());
+        ts.setFoundCount(cell.getFoundCount());
+        ts.setStepIndexA(currentCellIndexA + firstShownCellIndexA);
+        ts.setStepIndexB(currentCellIndexB + firstShownCellIndexB);
+        ts.setUserId(1);
+        ts.setMapId(mapResponse.getMapId());
+        return ts;
     }
 }

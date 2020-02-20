@@ -172,7 +172,7 @@ public class PickTestsetForm extends JDialog implements InitializingBean {
     }
 
     public Testset getResult() {
-        if (controller == null) return new Testset(8, 15.0,440.0, 640.0, 1,0);
+        if (controller == null) return new Testset();
         return controller.getCurrentAsTestset();
     }
 }

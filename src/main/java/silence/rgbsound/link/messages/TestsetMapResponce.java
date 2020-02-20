@@ -39,6 +39,7 @@ public class TestsetMapResponce {
         public boolean isEmpty() { return (startFreqA == 0.0 && startFreqB == 0.0); }
     }
 
+    int mapId;
     int stepWidth;
     double stepFactor;
     int coverageMax;
@@ -51,7 +52,8 @@ public class TestsetMapResponce {
         return emptyCell;
     }
 
-    public TestsetMapResponce(int sizeAB, int stepWidth, double stepFactor, int coverageMax, int foundMax) {
+    public TestsetMapResponce(int mapId, int sizeAB, int stepWidth, double stepFactor, int coverageMax, int foundMax) {
+        this.mapId = mapId;
         this.sizeAB = sizeAB;
         mapSquare = new ArrayList<>(sizeAB);
         for (int a = 0; a < sizeAB; a++) {
@@ -65,8 +67,6 @@ public class TestsetMapResponce {
         this.stepFactor = stepFactor;
         this.coverageMax = coverageMax;
         this.foundMax = foundMax;
-
-        //emptyCell = new TestsetMapCell();
     }
 
     public TestsetMapCell getCell(int indexA, int indexB) {
@@ -91,4 +91,5 @@ public class TestsetMapResponce {
     }
     public int getStepWidth() { return stepWidth; }
     public double getStepFactor() { return stepFactor; }
+    public int getMapId() { return mapId; }
 }

@@ -1,6 +1,9 @@
 package silence.rgbsound.client.control;
 
+import silence.rgbsound.db.Found;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class FreqCursor {
 
@@ -45,6 +48,12 @@ public class FreqCursor {
     }
     public double getFreqB() {
         return startFreqB + (currentStepB * stepSize);
+    }
+    public double getFreqA(int a) {
+        return startFreqA + (a * stepSize);
+    }
+    public double getFreqB(int b) {
+        return startFreqB + (b * stepSize);
     }
 
     public int getCurrentStepA() { return currentStepA; }
@@ -99,6 +108,20 @@ public class FreqCursor {
         else {
             cells.get(currentStepA).set(currentStepB, CellStatus.CHECKED);
         }
+    }
+    public List<Found> getAllChecked() {
+        ArrayList<Found> result = new ArrayList<>();
+        for (int a = 0; a < stepCount; a++)
+            for (int b = 0; b < stepCount; b++)
+            {
+                if (cells.get(a).get(b) == CellStatus.CHECKED) {
+                    Found f = new Found();
+                    f.setFreqA(getFreqA(a));
+                    f.setFreqB(getFreqB(b));
+                    result.add(f);
+                }
+            }
+        return result;
     }
 
     public void VisitCell() {

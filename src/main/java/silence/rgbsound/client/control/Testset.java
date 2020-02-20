@@ -1,12 +1,16 @@
 package silence.rgbsound.client.control;
 
 public class Testset {
-    int stepCount;
-    double stepSize;
-    double startFreqA;
-    double startFreqB;
-    int coverageCount;
-    int foundCount;
+    private int userId;
+    private int mapId;
+    private int stepIndexA;
+    private int stepIndexB;
+    private int stepCount;
+    private double stepSize;
+    private double startFreqA;
+    private double startFreqB;
+    private int coverageCount;
+    private int foundCount;
 
     public int getStepCount() {
         return stepCount;
@@ -56,12 +60,35 @@ public class Testset {
         this.foundCount = foundCount;
     }
 
-    public Testset(int stepCount, double stepSize, double startFreqA, double startFreqB, int coverageCount, int foundCount) {
-        this.stepCount = stepCount;
-        this.stepSize = stepSize;
-        this.startFreqA = startFreqA;
-        this.startFreqB = startFreqB;
-        this.coverageCount = coverageCount;
-        this.foundCount = foundCount;
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getMapId() {
+        return mapId;
+    }
+
+    public void setMapId(int mapId) {
+        this.mapId = mapId;
+    }
+
+    public int getStepIndexA() {
+        return stepIndexA;
+    }
+
+    public void setStepIndexA(int stepIndexA) {
+        this.stepIndexA = stepIndexA;
+    }
+
+    public int getStepIndexB() {
+        return stepIndexB;
+    }
+
+    public void setStepIndexB(int stepIndexB) {
+        this.stepIndexB = stepIndexB;
     }
 }

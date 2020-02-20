@@ -2,7 +2,11 @@ package silence.rgbsound.link;
 
 import org.springframework.stereotype.Service;
 import silence.rgbsound.client.control.CoverageCounter;
+import silence.rgbsound.db.CoverageDone;
+import silence.rgbsound.db.Found;
 import silence.rgbsound.link.messages.TestsetMapResponce;
+
+import java.util.List;
 
 @Service
 public class CommunicatorMockRandom implements Communicator {
@@ -24,7 +28,7 @@ public class CommunicatorMockRandom implements Communicator {
         counter.init(StartFreq, EndFreq, stepWidth, stepFactor);
         int sizeAB = counter.countLength();
 
-        TestsetMapResponce tr =  new TestsetMapResponce(sizeAB, stepWidth, stepFactor, coverageMax, foundMax );
+        TestsetMapResponce tr =  new TestsetMapResponce(mapIndex, sizeAB, stepWidth, stepFactor, coverageMax, foundMax );
 
         counter.start();
         while (counter.notEnd()) {
@@ -36,5 +40,10 @@ public class CommunicatorMockRandom implements Communicator {
         }
 
         return tr;
+    }
+
+    @Override
+    public void saveCoverage(CoverageDone coverage) {
+
     }
 }

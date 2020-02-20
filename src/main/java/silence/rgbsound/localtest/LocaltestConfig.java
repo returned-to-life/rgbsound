@@ -8,6 +8,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import silence.rgbsound.audio.PlaySound;
 import silence.rgbsound.client.control.*;
 import silence.rgbsound.client.forms.MainRunTestsetForm;
+import silence.rgbsound.client.forms.MakeDecisionForm;
 import silence.rgbsound.client.forms.PickTestsetForm;
 import silence.rgbsound.db.dao.CoverageDoneDao;
 import silence.rgbsound.db.dao.CoverageMapDao;
@@ -106,6 +107,13 @@ public class LocaltestConfig {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Bean
+    public MakeDecisionForm decisionForm() {
+        MakeDecisionForm mdf = new MakeDecisionForm();
+        mdf.setCommunicator(communicator());
+        return mdf;
     }
 
     @Bean

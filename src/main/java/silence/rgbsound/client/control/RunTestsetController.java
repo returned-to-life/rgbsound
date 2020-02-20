@@ -1,12 +1,16 @@
 package silence.rgbsound.client.control;
 
 import silence.rgbsound.audio.PlaySound;
+import silence.rgbsound.db.CoverageDone;
+import silence.rgbsound.db.Found;
 import silence.rgbsound.instrument.Sample;
 import silence.rgbsound.instrument.Wave;
 import silence.rgbsound.instrument.WaveMix;
+import silence.rgbsound.link.Communicator;
+import silence.rgbsound.link.messages.TestsetMapResponce;
 import silence.rgbsound.wavefile.WaveFileWriter;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class RunTestsetController {
     /* all MainRunTestsetForm actions */
@@ -21,6 +25,7 @@ public class RunTestsetController {
     PlaySound playSound;
     WaveFileWriter waveWriter;
     TestsetRunState state;
+    Testset testset;
 
     public AmpCursor getAmpCursor() { return ampCursor; }
     public FreqCursor getFreqCursor() { return freqCursor; }
@@ -41,9 +46,20 @@ public class RunTestsetController {
     }
 
     public void LoadTestset(Testset testset) {
+        this.testset = testset;
         setFreqCursor(new FreqCursor(testset.getStartFreqA(), testset.getStartFreqB(), testset.getStepCount(), testset.getStepSize()));
         setPhaseCursor(new PhaseCursor());
         Stop();
+    }
+    public CoverageDone getTestsetInfo() {
+        CoverageDone result = new CoverageDone();
+        if (testset != null) {
+            result.setCoverageMapId(testset.getMapId());
+            result.setUserId(testset.getUserId());
+            result.setStepIndexA(testset.getStepIndexA());
+            result.setStepIndexB(testset.getStepIndexB());
+        }
+        return result;
     }
     //----------------------------- actions -------------------------------------------
     public void Start() {

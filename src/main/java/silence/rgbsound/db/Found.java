@@ -11,12 +11,12 @@ public class Found implements Serializable {
         this.id = id;
     }
 
-    public long getCoverageMapId() {
-        return coverageMapId;
+    public long getCoverageDoneId() {
+        return coverageDoneId;
     }
 
-    public void setCoverageMapId(long coverageMapId) {
-        this.coverageMapId = coverageMapId;
+    public void setCoverageDoneId(long coverageDoneId) {
+        this.coverageDoneId = coverageDoneId;
     }
 
     public double getFreqA() {
@@ -44,7 +44,7 @@ public class Found implements Serializable {
     }
 
     long id;
-    long coverageMapId;
+    long coverageDoneId;
     double freqA;
     double freqB;
     boolean phaseMatters;
