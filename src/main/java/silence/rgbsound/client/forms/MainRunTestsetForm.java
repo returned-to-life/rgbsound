@@ -53,7 +53,6 @@ public class MainRunTestsetForm extends JFrame implements ApplicationContextAwar
 
     public void setTestsetController(RunTestsetController testsetController) {
         this.testsetController = testsetController;
-        watchFreqCursorComponent.setFreqCursor(testsetController.getFreqCursor());
     }
 
     RunTestsetController testsetController;
@@ -78,12 +77,19 @@ public class MainRunTestsetForm extends JFrame implements ApplicationContextAwar
         nextBButton.addActionListener(actionEvent -> onNextB());
         selectAnotherButton.addActionListener(actionEvent -> onGetNewTestset());
         makeDecisionButton.addActionListener(actionEvent -> onMakeDecision());
+        quitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                onQuit();
+            }
+        });
     }
 
     public void onLoad() {
         if (testsetController == null) return;
         testsetController.Stop();
 
+        watchFreqCursorComponent.setFreqCursor(testsetController.getFreqCursor());
         UpdateAmpFields(testsetController.getAmpCursor());
         UpdatePhaseFields(testsetController.getPhaseCursor());
         UpdateFreqFields(testsetController.getFreqCursor());
@@ -92,12 +98,17 @@ public class MainRunTestsetForm extends JFrame implements ApplicationContextAwar
     }
 
     private void onGetNewTestset() {
+        if (testsetController == null) return;
+
+        testsetController.Stop();
         Testset testset = ctx.getBean("testset", Testset.class);
         testsetController.LoadTestset(testset);
         onLoad();
     }
 
     private void onCheckUncheck() {
+        if (testsetController == null) return;
+
         testsetController.getFreqCursor().ToogleCheckCell();
         watchFreqCursorComponent.repaint();
     }
@@ -255,5 +266,10 @@ public class MainRunTestsetForm extends JFrame implements ApplicationContextAwar
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         ctx = applicationContext;
+    }
+
+    private void onQuit() {
+        dispose();
+        System.exit(0);
     }
 }
