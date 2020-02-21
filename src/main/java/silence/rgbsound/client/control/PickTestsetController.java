@@ -93,7 +93,8 @@ public class PickTestsetController {
     public Testset getCurrentAsTestset() {
         TestsetMapResponce.TestsetMapCell cell = getCell(currentCellIndexA, currentCellIndexB);
         Testset ts = new Testset();
-        ts.setStepSize(mapResponse.getStepFactor());
+        ts.setStepSizeA(mapResponse.getStepFactor() * cell.getStartFreqA());
+        ts.setStepSizeB(mapResponse.getStepFactor() * cell.getStartFreqB());
         ts.setStepCount(mapResponse.getStepWidth());
         ts.setStartFreqA(cell.getStartFreqA());
         ts.setStartFreqB(cell.getStartFreqB());

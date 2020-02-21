@@ -6,7 +6,8 @@ public class Testset {
     private int stepIndexA;
     private int stepIndexB;
     private int stepCount;
-    private double stepSize;
+    private double stepSizeA;
+    private double stepSizeB;
     private double startFreqA;
     private double startFreqB;
     private int coverageCount;
@@ -20,12 +21,20 @@ public class Testset {
         this.stepCount = stepCount;
     }
 
-    public double getStepSize() {
-        return stepSize;
+    public double getStepSizeA() {
+        return stepSizeA;
     }
 
-    public void setStepSize(double stepSize) {
-        this.stepSize = stepSize;
+    public void setStepSizeA(double stepSize) {
+        this.stepSizeA = stepSize;
+    }
+
+    public double getStepSizeB() {
+        return stepSizeB;
+    }
+
+    public void setStepSizeB(double stepSize) {
+        this.stepSizeB = stepSize;
     }
 
     public double getStartFreqA() {

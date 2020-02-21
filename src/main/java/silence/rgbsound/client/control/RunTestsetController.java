@@ -47,7 +47,7 @@ public class RunTestsetController {
 
     public void LoadTestset(Testset testset) {
         this.testset = testset;
-        setFreqCursor(new FreqCursor(testset.getStartFreqA(), testset.getStartFreqB(), testset.getStepCount(), testset.getStepSize()));
+        setFreqCursor(new FreqCursor(testset.getStartFreqA(), testset.getStartFreqB(), testset.getStepCount(), testset.getStepSizeA(), testset.getStepSizeB()));
         setPhaseCursor(new PhaseCursor());
         Stop();
     }

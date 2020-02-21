@@ -13,18 +13,20 @@ public class FreqCursor {
 
     double startFreqA;
     double startFreqB;
-    double stepSize;
+    double stepSizeA;
+    double stepSizeB;
 
     int stepCount;
     int currentStepA;
     int currentStepB;
     boolean sideA_first;
 
-    public FreqCursor(double startFreqA, double startFreqB, int stepCount, double stepSize) {
+    public FreqCursor(double startFreqA, double startFreqB, int stepCount, double stepSizeA, double stepSizeB) {
         this.startFreqA = startFreqA;
         this.startFreqB = startFreqB;
         this.stepCount = stepCount;
-        this.stepSize = stepSize;
+        this.stepSizeA = stepSizeA;
+        this.stepSizeB = stepSizeB;
 
         this.sideA_first = true;
 
@@ -38,22 +40,22 @@ public class FreqCursor {
     }
 
     public int getStepCount() { return stepCount; }
-    public double getMaxFreqA() { return startFreqA + (stepSize * stepCount); }
+    public double getMaxFreqA() { return startFreqA + (stepSizeA * stepCount); }
     public double getMinFreqA() { return startFreqA; }
-    public double getMaxFreqB() { return startFreqB + (stepSize * stepCount); }
+    public double getMaxFreqB() { return startFreqB + (stepSizeB * stepCount); }
     public double getMinFreqB() { return startFreqB; }
 
     public double getFreqA() {
-        return startFreqA + (currentStepA * stepSize);
+        return startFreqA + (currentStepA * stepSizeA);
     }
     public double getFreqB() {
-        return startFreqB + (currentStepB * stepSize);
+        return startFreqB + (currentStepB * stepSizeB);
     }
     public double getFreqA(int a) {
-        return startFreqA + (a * stepSize);
+        return startFreqA + (a * stepSizeA);
     }
     public double getFreqB(int b) {
-        return startFreqB + (b * stepSize);
+        return startFreqB + (b * stepSizeB);
     }
 
     public int getCurrentStepA() { return currentStepA; }
