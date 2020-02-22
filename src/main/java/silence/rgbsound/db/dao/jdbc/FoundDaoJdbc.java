@@ -1,10 +1,12 @@
 package silence.rgbsound.db.dao.jdbc;
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import silence.rgbsound.client.control.MapCellCounter;
 import silence.rgbsound.db.dao.FoundDao;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 
 public class FoundDaoJdbc implements FoundDao {
     private DataSource dataSource;
@@ -40,5 +42,16 @@ public class FoundDaoJdbc implements FoundDao {
         names.put("step_a", stepIndexA);
         names.put("step_b", stepIndexB);
         return jdbcTemplate.queryForObject(sql, names, Integer.class);
+    }
+
+    @Override
+    public List<MapCellCounter> getAllCellsFoundCount(int mapIndex) {
+        String sql = "select count(1) as count, step_index_a, step_index_b " +
+                "from found f inner join coverage_done cd on (f.coverage_done_id = cd.id) " +
+                "where coverage_map_id = :map_id " +
+                "group by step_index_a, step_index_b";
+        HashMap<String, Object> names = new HashMap<>();
+        names.put("map_id", mapIndex);
+        return jdbcTemplate.query(sql, names, new MapCellCounter.MapCellCounterMapper());
     }
 }

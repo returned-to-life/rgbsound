@@ -2,6 +2,7 @@ package silence.rgbsound.link;
 
 import org.springframework.stereotype.Service;
 import silence.rgbsound.client.control.CoverageCounter;
+import silence.rgbsound.client.control.MapCellCounter;
 import silence.rgbsound.db.CoverageDone;
 import silence.rgbsound.db.CoverageMap;
 import silence.rgbsound.db.Found;
@@ -47,9 +48,18 @@ public class CommunicatorMockDB implements Communicator {
         while (counter.notEnd()) {
             tr.setCell(counter.getStepIndexA(), counter.getStepIndexB(),
                     counter.getStepFreqA(), counter.getStepFreqB(),
-                    coverageDoneDao.getCellCoverageCount(mapIndex, counter.getStepIndexA(), counter.getStepIndexB()),
-                    foundDao.getCellFoundCount(mapIndex, counter.getStepIndexA(), counter.getStepIndexB()) );
+                    0,
+                    0 );
             counter.nextStep();
+        }
+
+        List<MapCellCounter> coverageCounts = coverageDoneDao.getAllCellsCoverageCount(mapIndex);
+        List<MapCellCounter> foundCounts = foundDao.getAllCellsFoundCount(mapIndex);
+        for (MapCellCounter cm : coverageCounts) {
+            tr.setCellCoverageCount(cm.getStepIndexA(), cm.getStepIndexB(), cm.getCount());
+        }
+        for (MapCellCounter fm : foundCounts) {
+            tr.setCellFoundCount(fm.getStepIndexA(), fm.getStepIndexB(), fm.getCount());
         }
 
         return tr;

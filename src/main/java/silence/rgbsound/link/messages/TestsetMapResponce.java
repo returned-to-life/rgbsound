@@ -31,10 +31,10 @@ public class TestsetMapResponce {
         public int getCoverageCount() {
             return coverageCount;
         }
+        public void setCoverageCount(int count) { this.coverageCount = count; }
 
-        public int getFoundCount() {
-            return foundCount;
-        }
+        public int getFoundCount() { return foundCount; }
+        public void setFoundCount(int count) { this.foundCount = count; }
 
         public boolean isEmpty() { return (startFreqA == 0.0 && startFreqB == 0.0); }
     }
@@ -77,6 +77,15 @@ public class TestsetMapResponce {
     public void setCell(int indexA, int indexB, double startFreqA, double startFreqB, int coverageCount, int foundCount) {
         if (indexA > indexB || indexA >= sizeAB || indexB >= sizeAB) return;
         getCell(indexA, indexB).init(startFreqA, startFreqB, coverageCount, foundCount);
+    }
+
+    public void setCellCoverageCount(int indexA, int indexB, int count) {
+        if (indexA > indexB || indexA >= sizeAB || indexB >= sizeAB) return;
+        getCell(indexA, indexB).setCoverageCount(count);
+    }
+    public void setCellFoundCount(int indexA, int indexB, int count) {
+        if (indexA > indexB || indexA >= sizeAB || indexB >= sizeAB) return;
+        getCell(indexA, indexB).setFoundCount(count);
     }
 
     public int getCoverageMax() {

@@ -1,16 +1,21 @@
 package silence.rgbsound.db.dao.jdbc;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.object.BatchSqlUpdate;
 import org.springframework.jdbc.object.SqlUpdate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import silence.rgbsound.client.control.MapCellCounter;
 import silence.rgbsound.db.CoverageDone;
+import silence.rgbsound.db.CoverageMap;
 import silence.rgbsound.db.Found;
 import silence.rgbsound.db.dao.CoverageDoneDao;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +53,15 @@ public class CoverageDoneDaoJdbc implements CoverageDoneDao {
         names.put("step_a", stepIndexA);
         names.put("step_b", stepIndexB);
         return jdbcTemplate.queryForObject(sql, names, Integer.class);
+    }
+
+    @Override
+    public List<MapCellCounter> getAllCellsCoverageCount(int mapIndex) {
+        String sql = "select count(1) as count, step_index_a, step_index_b from coverage_done where coverage_map_id = :map_id " +
+                "group by step_index_a, step_index_b";
+        HashMap<String, Object> names = new HashMap<>();
+        names.put("map_id", mapIndex);
+        return jdbcTemplate.query(sql, names, new MapCellCounter.MapCellCounterMapper());
     }
 
     public class InsertCoverageDone extends SqlUpdate {
